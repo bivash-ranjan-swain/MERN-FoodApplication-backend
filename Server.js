@@ -1,25 +1,38 @@
-import express from 'express'
-import dotenv from 'dotenv/config'
-import connectDb from './config/db.js'
-import dns from "dns"
-import userRouter from './controllers/User.controller.js'
+import dotenv from "dotenv";
+dotenv.config();
+dotenv.config({ override: true });
+import colors from 'colors'
+import cors from "cors";
+import express from "express";
+import connectDb from "./db.js";
+import dns from "dns";
+import cookieParser from "cookie-parser";
+import UserRouter from "./routes/user.route.js";
+import FoodRouter from "./routes/food.route.js";
+import morgan from 'morgan'
 
-const app = express()
 
-app.use(express.json())
-app.use("/api/auth", userRouter)
+const app = express();
+app.get("/", (req, res)=>{
+  res.send("Server main page.")
+})
+app.use(morgan('dev'))
 
-dns.setServers(["8.8.8.8", "8.8.8.4"])
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  }),
+);
 
-const PORT = process.env.PORT || 8000
+app.use("/api/auth", UserRouter);
+app.use("/api/food", FoodRouter);
+
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+const PORT = process.env.PORT || 5500;
 connectDb();
-
-
-app.get("/",(req, res)=>{
-    res.send("Hello From Get Route")
-})
-
-
-app.listen(PORT, ()=>{
-    console.log(`server is running on ${PORT}`);
-})
+app.listen(PORT, () => {
+  console.log(`Server is Runing On ${PORT}`);
+});
