@@ -1,23 +1,18 @@
 import dotenv from "dotenv";
-dotenv.config();
-dotenv.config({ override: true });
-import colors from 'colors'
+dotenv.config()
+
+import colors from "colors";
 import cors from "cors";
 import express from "express";
-import connectDb from "./db.js";
-import dns from "dns";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import connectDb from "./config/db.js";
 import UserRouter from "./routes/user.route.js";
 import FoodRouter from "./routes/food.route.js";
-import morgan from 'morgan'
-
 
 const app = express();
-app.get("/", (req, res)=>{
-  res.send("Server main page.")
-})
-app.use(morgan('dev'))
 
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -27,12 +22,27 @@ app.use(
   }),
 );
 
+app.get("/", (req, res) => {
+  res.send("Server main page.");
+});
+
 app.use("/api/auth", UserRouter);
 app.use("/api/food", FoodRouter);
 
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: "Route not found" });
+});
+
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ success: false, message: "Something went wrong" });
+});
+
 const PORT = process.env.PORT || 5500;
+
 connectDb();
 app.listen(PORT, () => {
-  console.log(`Server is Runing On ${PORT}`);
+  console.log(`Server is running on port ${PORT}`.yellow.bold);
 });

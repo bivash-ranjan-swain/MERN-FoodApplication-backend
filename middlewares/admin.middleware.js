@@ -1,0 +1,15 @@
+
+export const isAdmin = (req, res, next) => {
+  try {
+    console.log("DEBUG req.user:", req.user);
+    if (req.user.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access Denied. Admin Only",
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
