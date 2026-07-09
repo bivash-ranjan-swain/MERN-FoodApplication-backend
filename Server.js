@@ -9,6 +9,9 @@ import morgan from "morgan";
 import connectDb from "./config/db.js";
 import UserRouter from "./routes/user.route.js";
 import FoodRouter from "./routes/food.route.js";
+import TableRouter from "./routes/table.route.js";
+import ContactRouter from "./routes/contact.route.js"
+import ServiceRouter from "./routes/services.route.js"
 
 const app = express();
 
@@ -28,6 +31,9 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", UserRouter);
 app.use("/api/food", FoodRouter);
+app.use("/api/table", TableRouter);
+app.use("/api/contact", ContactRouter)
+app.use("/api/service",ServiceRouter)
 
 
 app.use((req, res) => {

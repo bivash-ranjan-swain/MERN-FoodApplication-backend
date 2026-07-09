@@ -1,83 +1,16 @@
-// ======================================
-// Create Contact
-// ======================================
+import express from "express";
+import {
+  createContact,
+  getAllContacts,
+  deleteContact,
+} from "../controllers/contact.controller.js";
+import { isAuthenticated } from "../middlewares/auth.middleware.js";
+import { isAdmin } from "../middlewares/admin.middleware.js";
 
-import ContactModel from "../model/contact.model.js";
+const ContactRouter = express.Router();
 
-export const createContact = async (req, res) => {
-  try {
-    const { name, email, subject, message } = req.body;
+ContactRouter.post("/create-contact", createContact); 
+ContactRouter.get("/all", isAuthenticated, isAdmin, getAllContacts); 
+ContactRouter.delete("/delete/:id", isAuthenticated, isAdmin, deleteContact); 
 
-    const contact = await ContactModel.create({
-      name,
-      email,
-      subject,
-      message,
-    });
-
-    return res.status(201).json({
-      success: true,
-      message: "Message sent successfully.",
-      contact,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-// ======================================
-// Get All Contacts
-// ======================================
-
-export const getAllContacts = async (req, res) => {
-  try {
-    const contacts = await ContactModel.find().sort({
-      createdAt: -1,
-    });
-
-    return res.status(200).json({
-      success: true,
-      total: contacts.length,
-      contacts,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-// ======================================
-// Delete Contact
-// ======================================
-
-export const deleteContact = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const contact = await ContactModel.findById(id);
-
-    if (!contact) {
-      return res.status(404).json({
-        success: false,
-        message: "Contact not found.",
-      });
-    }
-
-    await ContactModel.findByIdAndDelete(id);
-
-    return res.status(200).json({
-      success: true,
-      message: "Contact deleted successfully.",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
+export default ContactRouter;

@@ -1,12 +1,13 @@
 import express from "express";
-import { createTable, getAllTables } from "../controllers/table.controller.js";
-import { isAuthenticated } from "../middleware/auth.middleware.js";
-import { isAdmin } from "../middleware/admin.middleware.js";
+import { createTable, getAllTables, deleteTable,  } from "../controllers/table.controller.js";
+import { isAuthenticated } from "../middlewares/auth.middleware.js";
+import { isAdmin } from "../middlewares/admin.middleware.js";
 
 const TableRouter = express.Router();
 
-TableRouter.post("/create", isAuthenticated, isAdmin, createTable);
-FoodRouter.get("/all", getAllTables);
-FoodRouter.delete("/delete/:id", isAuthenticated, isAdmin, deleteTable);
+TableRouter.post("/create-table", isAuthenticated, isAdmin, createTable);
+TableRouter.get("/all-tables", getAllTables);
+TableRouter.delete("/delete/:id", isAuthenticated, isAdmin, deleteTable);
 
-export default FoodRouter;
+export default TableRouter;
+// http://localhost:8800/api/table/create-table

@@ -1,4 +1,5 @@
-import TableModel from "../model/table.model.js";
+import TableModel from "../models/table.model.js";
+
 
 export const createTable = async (req, res) => {
   try {
@@ -48,7 +49,7 @@ export const deleteTable = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const table = await TableModel.findById(id);
+    const table = await TableModel.findById(id)
 
     if (!table) {
       return res.status(404).json({
