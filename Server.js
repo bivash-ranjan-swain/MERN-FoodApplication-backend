@@ -34,6 +34,7 @@ app.use("/api/food", FoodRouter);
 app.use("/api/table", TableRouter);
 app.use("/api/contact", ContactRouter)
 app.use("/api/service",ServiceRouter)
+app.use("/uploads", express.static("uploads"));
 
 
 app.use((req, res) => {
